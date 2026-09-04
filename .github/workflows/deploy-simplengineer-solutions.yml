@@ -1,0 +1,36 @@
+name: Deploy Resume to AWS
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "simplengineer_solutions/**"
+      - ".github/workflows/deploy-simplengineer-solutions.yml"
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v5
+        with:
+          role-to-assume: ${{ secrets.AWS_SIMPLENGINEER_SOLUTIONS_DEPLOY_ROLE_ARN }}
+          aws-region: us-east-2
+
+      - name: Deploy simplengineer solutions to S3
+        run: aws s3 sync ./resume s3://simplengineer-solutions-prod --delete
+
+      - name: Invalidate CloudFront cache
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id E15GVSED2TWOI8 \
+            --paths "/*"
