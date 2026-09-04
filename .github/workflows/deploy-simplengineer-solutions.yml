@@ -27,10 +27,10 @@ jobs:
           aws-region: us-east-2
 
       - name: Deploy simplengineer solutions to S3
-        run: aws s3 sync ./resume s3://simplengineer-solutions-prod --delete
+        run: aws s3 sync ./simplengineer_solutions s3://simplengineer-solutions-prod --delete
 
       - name: Invalidate CloudFront cache
         run: |
           aws cloudfront create-invalidation \
-            --distribution-id E15GVSED2TWOI8 \
+            --distribution-id E2LZETVOWKRWBD \
             --paths "/*"
