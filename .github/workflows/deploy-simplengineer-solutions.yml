@@ -1,4 +1,4 @@
-name: Deploy Resume to AWS
+name: Deploy Simplengineer Solutions to AWS
 
 on:
   push:
